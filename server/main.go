@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	address            = "localhost:8080"
+	address            = "localhost:9998"
 	stopWordFromClient = "goodbye"
 )
 
@@ -48,6 +48,7 @@ func startServer(address string) {
 	if err != nil {
 		log.Println(errors.Wrapf(err, "can not listen connection"))
 	}
+
 	defer listener.Close()
 
 	fmt.Println("server listening at:", address)

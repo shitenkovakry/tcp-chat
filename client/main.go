@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	address  = "localhost:8080"
+	address  = "localhost:9998"
 	stopWord = "goodbye"
 )
 

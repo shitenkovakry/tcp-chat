@@ -27,6 +27,28 @@ func sendToServerNickname(connection net.Conn, nickname string) error {
 	return nil
 }
 
+func sendRequestToServer(connection net.Conn, address string, nicknameOfCompanion string) error {
+	request := fmt.Sprintln("connect with", nicknameOfCompanion)
+
+	if _, err := connection.Write([]byte(request)); err != nil {
+		return errors.Wrapf(err, "can not connect")
+	}
+
+	log.Println("communication request sent", nicknameOfCompanion)
+
+	// получение ответа от сервера
+	response := make([]byte, 1024)
+
+	readLen, err := connection.Read(response)
+	if err != nil {
+		return errors.Wrapf(err, "can not read response from server")
+	}
+
+	log.Println("recieved a response from server:", string(response[:readLen]))
+
+	return nil
+}
+
 func connectToServer(address string) (net.Conn, error) {
 	// Подключение к серверу по адресу "localhost:8080"
 	connection, err := net.Dial("tcp", address)
@@ -57,6 +79,7 @@ func main() {
 	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
 
 	nickname := "kry"
+	nicknameOfCompanion := "ondrys"
 
 	connection, err := connectToServer(address)
 	if err != nil {
@@ -68,6 +91,10 @@ func main() {
 	if err := sendToServerNickname(connection, nickname); err != nil {
 		panic(errors.Wrapf(err, "can not send name to server"))
 
+	}
+
+	if err := sendRequestToServer(connection, address, nicknameOfCompanion); err != nil {
+		panic(errors.Wrapf(err, "can not send request to companion"))
 	}
 
 	// Ожидание сигнала завершения программы

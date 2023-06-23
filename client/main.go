@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	address  = "localhost:9998"
-	stopWord = "goodbye"
+	address            = "localhost:9998"
+	addressOfCompanion = "localhost:9999"
+	stopWord           = "goodbye"
 )
 
 func sendToServerNickname(connection net.Conn, nickname string) error {
@@ -27,7 +28,7 @@ func sendToServerNickname(connection net.Conn, nickname string) error {
 	return nil
 }
 
-func sendRequestToServer(connection net.Conn, address string, nicknameOfCompanion string) error {
+func sendRequestToServer(connection net.Conn, addressOfCompanion string, nicknameOfCompanion string) error {
 	request := fmt.Sprintln("connect with", nicknameOfCompanion)
 
 	if _, err := connection.Write([]byte(request)); err != nil {
@@ -93,7 +94,7 @@ func main() {
 
 	}
 
-	if err := sendRequestToServer(connection, address, nicknameOfCompanion); err != nil {
+	if err := sendRequestToServer(connection, addressOfCompanion, nicknameOfCompanion); err != nil {
 		panic(errors.Wrapf(err, "can not send request to companion"))
 	}
 
